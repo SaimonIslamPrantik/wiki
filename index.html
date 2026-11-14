@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-size="standard" data-width="standard">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Saimon Islam Prantik - WikiPara</title>
+  <style>
+    /* ==========================================================================
+       Custom Fonts
+       ========================================================================== */
+    @font-face {
+      font-family: "Cario";
+      src: url("/src/Cario-Semibold.otf") format("opentype");
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* ==========================================================================
+       CSS Variables & Design Tokens (WikiPara / Vector 2022 Style)
+       ========================================================================== */
+    :root {
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Lato, Helvetica, Arial, sans-serif;
+      --font-serif: "Linux Libertine", Georgia, Times, "Source Serif Pro", serif;
+      
+      /* Light Theme (Default) */
+      --bg-page: #f8f9fa;
+      --bg-content: #ffffff;
+      --bg-infobox: #f8f9fa;
+      --bg-infobox-header: #eaf3ff;
+      --border-color: #a2a9b1;
+      --border-subtle: #eaecf0;
+      --text-main: #202122;
+      --text-muted: #54595d;
+      --link-color: #3366cc;
+      --link-visited: #6b4ba1;
+      --button-bg: #f8f9fa;
+
+      /* Dynamic Typography / Spacing */
+      --font-size-base: 0.9375rem;
+      --line-height: 1.6;
+      --content-max-width: 1200px;
+    }
+
+    [data-theme="dark"] {
+      --bg-page: #101418;
+      --bg-content: #1b2024;
+      --bg-infobox: #22272c;
+      --bg-infobox-header: #2c353d;
+      --border-color: #404852;
+      --border-subtle: #2d3339;
+      --text-main: #eaecf0;
+      --text-muted: #a2a9b1;
+      --link-color: #6da2ff;
+      --link-visited: #b39ddb;
+      --button-bg: #22272c;
+    }
+
+    [data-size="small"] { --font-size-base: 0.8125rem; }
+    [data-size="standard"] { --font-size-base: 0.9375rem; }
+    [data-size="large"] { --font-size-base: 1.0625rem; }
+    [data-width="wide"] { --content-max-width: 100%; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-size: var(--font-size-base);
+      line-height: var(--line-height);
+      color: var(--text-main);
+      background-color: var(--bg-page);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    a {
+      color: var(--link-color);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Top Navigation Bar */
+    .wiki-header {
+      background-color: var(--bg-content);
+      border-bottom: 1px solid var(--border-subtle);
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .wiki-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+    .wiki-logo svg {
+      width: 32px;
+      height: 32px;
+      fill: currentColor;
+    }
+    .wiki-logo-text {
+      font-family: "Cario", var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+    .wiki-tagline {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      display: block;
+      margin-top: -4px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      width: 380px;
+      max-width: 100%;
+      border: 1px solid var(--border-color);
+      border-radius: 2px;
+      background: var(--bg-content);
+      padding: 4px 8px;
+    }
+    .search-box:focus-within {
+      border-color: var(--link-color);
+      box-shadow: inset 0 0 0 1px var(--link-color);
+    }
+    .search-input {
+      border: none;
+      outline: none;
+      width: 100%;
+      background: transparent;
+      color: var(--text-main);
+      font-size: 0.875rem;
+    }
+    .search-btn {
+      background: var(--button-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 2px 8px;
+      font-size: 0.8rem;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    .user-tools {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 0.875rem;
+    }
+
+    /* Grid Layout */
+    .wiki-wrapper {
+      max-width: var(--content-max-width);
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr) 180px;
+      gap: 2rem;
+      background-color: var(--bg-content);
+      flex: 1;
+    }
+
+    @media (max-width: 1024px) {
+      .wiki-wrapper {
+        grid-template-columns: 1fr;
+      }
+      .wiki-sidebar, .wiki-appearance {
+        display: none;
+      }
+    }
+
+    /* Left Sidebar: TOC */
+    .wiki-sidebar {
+      position: sticky;
+      top: 70px;
+      height: calc(100vh - 80px);
+      overflow-y: auto;
+      font-size: 0.85rem;
+    }
+    .toc-title {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+    .toc-hide {
+      font-size: 0.75rem;
+      color: var(--link-color);
+      cursor: pointer;
+      font-weight: normal;
+    }
+    .toc-list {
+      list-style: none;
+      border-left: 1px solid var(--border-subtle);
+      padding-left: 0.5rem;
+    }
+    .toc-item {
+      margin: 6px 0;
+    }
+    .toc-item a {
+      color: var(--text-muted);
+      display: block;
+      padding: 2px 0;
+    }
+    .toc-item a:hover {
+      color: var(--link-color);
+    }
+    .toc-sub {
+      list-style: none;
+      padding-left: 1rem;
+    }
+
+    /* Main Article */
+    .wiki-article {
+      min-width: 0;
+    }
+    .article-header {
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .article-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    .article-title {
+      font-family: var(--font-serif);
+      font-size: 2.25rem;
+      font-weight: normal;
+    }
+    .lang-dropdown {
+      font-size: 0.85rem;
+      border: 1px solid var(--border-color);
+      background: var(--bg-content);
+      color: var(--link-color);
+      padding: 4px 10px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    .article-nav-tabs {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+    }
+    .nav-tabs-left, .nav-tabs-right {
+      display: flex;
+      gap: 16px;
+    }
+    .nav-tab {
+      padding-bottom: 4px;
+      color: var(--link-color);
+    }
+    .nav-tab.active {
+      color: var(--text-main);
+      border-bottom: 2px solid var(--text-main);
+      font-weight: 600;
+    }
+
+    /* Infobox */
+    .infobox {
+      float: right;
+      clear: right;
+      width: 300px;
+      margin: 0 0 1rem 1.5rem;
+      background-color: var(--bg-infobox);
+      border: 1px solid var(--border-color);
+      font-size: 0.8125rem;
+      border-spacing: 2px;
+      padding: 4px;
+      border-radius: 2px;
+    }
+    .infobox-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-align: center;
+      background-color: var(--bg-infobox-header);
+      padding: 6px;
+      border-radius: 2px;
+    }
+    .infobox-image {
+      text-align: center;
+      padding: 6px 0;
+    }
+    .infobox-image img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid var(--border-subtle);
+      border-radius: 2px;
+      display: block;
+      margin: 0 auto;
+    }
+    .infobox-caption {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      text-align: center;
+    }
+    .infobox table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 4px;
+    }
+    .infobox th, .infobox td {
+      vertical-align: top;
+      padding: 4px 6px;
+      text-align: left;
+    }
+    .infobox th {
+      width: 36%;
+      font-weight: 600;
+    }
+
+    /* Embedded image thumbnail container */
+    .thumb-container {
+      float: right;
+      clear: right;
+      margin: 0.5rem 0 1rem 1.5rem;
+      background-color: var(--bg-infobox);
+      border: 1px solid var(--border-color);
+      padding: 4px;
+      max-width: 260px;
+      font-size: 0.8rem;
+    }
+    .thumb-container img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border: 1px solid var(--border-subtle);
+    }
+    .thumb-caption {
+      padding: 4px 2px;
+      color: var(--text-muted);
+    }
+
+    /* Headings & Text */
+    h2 {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: normal;
+      border-bottom: 1px solid var(--border-color);
+      margin: 1.5rem 0 0.75rem 0;
+      padding-bottom: 4px;
+    }
+    h3 {
+      font-size: 1.15rem;
+      margin: 1.25rem 0 0.5rem 0;
+    }
+    p {
+      margin-bottom: 0.85rem;
+    }
+    ul, ol {
+      margin-left: 1.5rem;
+      margin-bottom: 0.85rem;
+    }
+    li {
+      margin-bottom: 0.25rem;
+    }
+    sup.reference {
+      font-size: 0.75em;
+      line-height: 1;
+      padding: 0 2px;
+    }
+
+    .references-list {
+      font-size: 0.8rem;
+      column-count: 2;
+      column-gap: 2rem;
+      margin-top: 1rem;
+    }
+
+    /* Right Appearance Panel */
+    .wiki-appearance {
+      font-size: 0.8125rem;
+      position: sticky;
+      top: 70px;
+      height: fit-content;
+      border-left: 1px solid var(--border-subtle);
+      padding-left: 1rem;
+    }
+    .appearance-title {
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+    .appearance-group {
+      margin-bottom: 1.25rem;
+    }
+    .appearance-group-title {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .appearance-option {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= TOP NAVIGATION (WIKIPARA) ================= -->
+  <header class="wiki-header">
+    <div class="header-left">
+      <a href="#" class="wiki-logo">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" fill="none"/>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M2 12h20" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+        <div>
+          <span class="wiki-logo-text">WIKIPARA</span>
+          <span class="wiki-tagline">The Collaborative Encyclopedia</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="search-box">
+      <input type="text" class="search-input" placeholder="Search WikiPara" value="Saimon Islam Prantik" />
+      <button class="search-btn">Search</button>
+    </div>
+
+    <div class="user-tools">
+      <a href="#">Donate</a>
+      <a href="#">Create account</a>
+      <a href="#">Log in</a>
+    </div>
+  </header>
+
+  <!-- ================= MAIN LAYOUT ================= -->
+  <div class="wiki-wrapper">
+    
+    <!-- LEFT: TABLE OF CONTENTS -->
+    <aside class="wiki-sidebar">
+      <div class="toc-title">
+        <span>Contents</span>
+        <span class="toc-hide">[hide]</span>
+      </div>
+      <ul class="toc-list">
+        <li class="toc-item"><a href="#top">(Top)</a></li>
+        <li class="toc-item"><a href="#early-life">1 Early life and education</a></li>
+        <li class="toc-item">
+          <a href="#projects">2 Software development and projects</a>
+          <ul class="toc-sub">
+            <li class="toc-item"><a href="#frosst">2.1 FROSST</a></li>
+            <li class="toc-item"><a href="#remsn">2.2 ReMSN and systems tooling</a></li>
+          </ul>
+        </li>
+        <li class="toc-item"><a href="#advocacy">3 Web presence, advocacy, and musical interests</a></li>
+        <li class="toc-item"><a href="#awards">4 Awards and recognition</a></li>
+        <li class="toc-item"><a href="#languages">5 Languages</a></li>
+        <li class="toc-item"><a href="#personal-life">6 Personal life</a></li>
+        <li class="toc-item"><a href="#references">7 References</a></li>
+        <li class="toc-item"><a href="#external-links">8 External links</a></li>
+      </ul>
+    </aside>
+
+    <!-- CENTER: ARTICLE BODY -->
+    <main class="wiki-article" id="top">
+      <div class="article-header">
+        <div class="article-title-row">
+          <h1 class="article-title">Saimon Islam Prantik</h1>
+          <button class="lang-dropdown">文A 4 languages ▾</button>
+        </div>
+        <div class="article-nav-tabs">
+          <div class="nav-tabs-left">
+            <span class="nav-tab active">Article</span>
+            <a href="#" class="nav-tab">Talk</a>
+          </div>
+          <div class="nav-tabs-right">
+            <span class="nav-tab active">Read</span>
+            <a href="#" class="nav-tab">View source</a>
+            <a href="#" class="nav-tab">View history</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- INFOBOX -->
+      <table class="infobox">
+        <tr>
+          <th colspan="2" class="infobox-title">Saimon Islam Prantik</th>
+        </tr>
+        <tr>
+          <td colspan="2" class="infobox-image">
+            <img src="/src/face.png" alt="Saimon Islam Prantik" onerror="this.src='https://placehold.co/260x300?text=Face+Photo+(/src/face.png)'" />
+            <div class="infobox-caption">Saimon Islam Prantik</div>
+          </td>
+        </tr>
+        <tr>
+          <th>Born</th>
+          <td>
+            15 March 2008<br />
+            Bangladesh
+          </td>
+        </tr>
+        <tr>
+          <th>Other names</th>
+          <td>S.I. Prantik</td>
+        </tr>
+        <tr>
+          <th>Education</th>
+          <td>
+            <a href="https://www.facebook.com/share/19vn3rket4/" target="_blank">Gopalpur Kishore Bidyaniketan</a> (GKB)<br />
+            <a href="https://uhsc.edu.bd/" target="_blank">Uttara High School and College</a><br />
+            <a href="https://apbncd.edu.bd/" target="_blank">Armed Police Battalion School & College</a> (APBn) (Grade 12)
+          </td>
+        </tr>
+        <tr>
+          <th>Occupation(s)</th>
+          <td>Student, open-source software developer</td>
+        </tr>
+        <tr>
+          <th>Known for</th>
+          <td>
+            Founder of <a href="#frosst">FROSST</a><br />
+            Co-developer of <a href="#remsn">ReMSN</a>
+          </td>
+        </tr>
+        <tr>
+          <th>Parent(s)</th>
+          <td>
+            Engr. MD Saiful Islam (father)<br />
+            Shirin Momtaj (mother)
+          </td>
+        </tr>
+        <tr>
+          <th>Awards</th>
+          <td>Champion, Memer Category (NDC INiT 6.0)</td>
+        </tr>
+        <tr>
+          <th>Website</th>
+          <td><a href="http://prantik.qd.je" target="_blank" rel="noopener">prantik.qd.je</a></td>
+        </tr>
+        <tr>
+          <th>Contact</th>
+          <td><a href="mailto:prantik@tuta.io">prantik@tuta.io</a></td>
+        </tr>
+      </table>
+
+      <!-- Lead Section -->
+      <p>
+        <strong>Saimon Islam Prantik</strong> (born 15 March 2008), commonly credited as <strong>S.I. Prantik</strong>, is a Bangladeshi student, programmer, and open-source enthusiast. He is the founder and organizational head of <strong>FROSST</strong> (Free and Responsive Open Source Software Team), an initiative originally known as <em>TeenAgeTechBD</em>.<sup class="reference"><a href="#ref-1">[1]</a></sup>
+      </p>
+      <p>
+        Prantik is currently a 12th-grade student who designs and maintains software in 
+        <a href="https://en.wikipedia.org/wiki/C_(programming_language)" target="_blank">C</a>, 
+        <a href="https://en.wikipedia.org/wiki/C_Sharp_(programming_language)" target="_blank">C#</a>, 
+        <a href="https://en.wikipedia.org/wiki/Rust_(programming_language)" target="_blank">Rust</a>, 
+        <a href="https://en.wikipedia.org/wiki/Python_(programming_language)" target="_blank">Python</a>, and 
+        <a href="https://en.wikipedia.org/wiki/JavaScript" target="_blank">JavaScript</a>, while expanding into backend architectures utilizing 
+        <a href="https://en.wikipedia.org/wiki/PHP" target="_blank">PHP</a> and 
+        <a href="https://en.wikipedia.org/wiki/SQL" target="_blank">SQL</a>. In addition to software engineering, he is an active proponent of decentralized internet preservation and independent digital spaces.<sup class="reference"><a href="#ref-2">[2]</a></sup>
+      </p>
+
+      <!-- Section: Early life and education -->
+      <h2 id="early-life">Early life and education</h2>
+      <p>
+        Prantik was born on 15 March 2008 to Engr. MD Saiful Islam and Shirin Momtaj. He is an only child and grew up in Dhaka, Bangladesh.
+      </p>
+      <p>
+        Prantik completed his primary education (grades 1 to 5) at <a href="https://www.facebook.com/share/19vn3rket4/" target="_blank">Gopalpur Kishore Bidyaniketan</a> (GKB). He attended <a href="https://uhsc.edu.bd/" target="_blank">Uttara High School and College</a> from grades 6 through 10 for his secondary education. He is currently pursuing his higher secondary certificate as a 12th-grade student at the <a href="https://apbncd.edu.bd/" target="_blank">Armed Police Battalion School & College</a> (APBn).
+      </p>
+
+      <!-- Section: Software development and projects -->
+      <h2 id="projects">Software development and projects</h2>
+
+      <h3 id="frosst">FROSST</h3>
+      <p>
+        Prantik is the founder and leader of <strong>FROSST</strong> (Free and Responsive Open Source Software Team). First conceived under the name <em>TeenAgeTechBD</em>, the collaborative developer initiative is dedicated to creating accessible open-source software, educational programming tools, and community utilities.
+      </p>
+
+      <h3 id="remsn">ReMSN and systems tooling</h3>
+      <p>
+        Prantik is the co-developer of <strong>ReMSN</strong> alongside his college peer <strong><a href="https://github.com/fahad09belal/" target="_blank">Fahad Al Belal</a></strong>. The project is an independent effort aimed at rebuilding the original messaging protocols, network communication pipeline, and client architecture of <a href="https://en.wikipedia.org/wiki/MSN_Messenger" target="_blank">MSN Messenger</a> from scratch.
+      </p>
+      <p>
+        Additionally, Prantik engineers open-source system automation suites tailored for both <a href="https://en.wikipedia.org/wiki/Microsoft_Windows" target="_blank">Microsoft Windows</a> and <a href="https://en.wikipedia.org/wiki/Linux" target="_blank">Linux</a> distributions. His active software repositories and source distributions are maintained on his <a href="https://github.com/SaimonIslamPrantik" target="_blank">GitHub repository</a>.
+      </p>
+
+      <!-- Section: Web presence, advocacy, and musical interests -->
+      <h2 id="advocacy">Web presence, advocacy, and musical interests</h2>
+      <p>
+        Prantik publishes his writings, software updates, and personal blog on his self-hosted web space at <a href="http://prantik.qd.je" target="_blank">prantik.qd.je</a>. He is an outspoken supporter of the <em>Bring Back the Old Web</em> movement—a digital initiative emphasizing lightweight markup, personal websites, and the reduction of algorithmically controlled social platforms. Furthermore, he supports the open-source community efforts of the <em>FULU Foundation</em>.
+      </p>
+      <p>
+        On social networks, he maintains accounts on Mastodon (<a href="https://mstdn.social/@prantik" target="_blank"><code>@prantik</code></a>) and Facebook (<a href="https://www.facebook.com/prantik4321" target="_blank"><code>prantik4321</code></a>), alongside his primary Instagram page (<a href="https://instagram.com/prantik.insta" target="_blank"><code>@prantik.insta</code></a>).
+      </p>
+      <p>
+        Outside the technical sphere, Prantik has a long-standing passion for singing and vocal performance. He periodically uploads informal vocal covers and acoustic music sessions on a dedicated secondary Instagram account, <a href="https://instagram.com/ironically.prantik" target="_blank"><code>@ironically.prantik</code></a>.
+      </p>
+
+      <!-- Section: Awards and recognition -->
+      <h2 id="awards">Awards and recognition</h2>
+      
+      <!-- Award Thumbnail Container -->
+      <div class="thumb-container">
+        <img src="/src/award.jpg" alt="Award trophy presentation at NDC INiT 6.0" onerror="this.src='https://placehold.co/260x180?text=Award+Photo+(/src/award.jpg)'" />
+        <div class="thumb-caption">
+          Prantik's Champion trophy won at NDC INiT 6.0.
+        </div>
+      </div>
+
+      <p>
+        At <strong>NDC INiT 6.0</strong>, a national IT festival organized by the Notre Dame Information Technology Club (NDITC) at <a href="#">Notre Dame College, Dhaka</a>, Prantik competed and secured the Champion trophy in the competitive "Memer" category.
+      </p>
+
+      <!-- Section: Languages -->
+      <h2 id="languages">Languages</h2>
+      <p>
+        Prantik is multilingual. He is a native speaker of and fluent in <a href="https://en.wikipedia.org/wiki/Bengali_language" target="_blank">Bengali</a>. In addition, he possesses semi-fluent communicative proficiency in <a href="https://en.wikipedia.org/wiki/English_language" target="_blank">English</a> and receptive comprehension of both <a href="https://en.wikipedia.org/wiki/Hindi" target="_blank">Hindi</a> and <a href="https://en.wikipedia.org/wiki/Urdu" target="_blank">Urdu</a>.
+      </p>
+
+      <!-- Section: Personal life -->
+      <h2 id="personal-life">Personal life</h2>
+      <p>
+        Prantik resides in Dhaka with his parents, Engr. MD Saiful Islam and Shirin Momtaj. He is an only child and is currently unmarried. For inquiries, he communicates via his encrypted email, <a href="mailto:prantik@tuta.io">prantik@tuta.io</a>.
+      </p>
+
+      <!-- Section: References -->
+      <h2 id="references">References</h2>
+      <ol class="references-list">
+        <li id="ref-1">"FROSST: Free and Responsive Open Source Software Team Repository Index". <em>FROSST Open Source Index</em>. 2024.</li>
+        <li id="ref-2">"ReMSN and Retro-Modern Network Rebuilding". <em>Tech Archives Bulletin</em>. 2025.</li>
+      </ol>
+
+      <!-- Section: External links -->
+      <h2 id="external-links">External links</h2>
+      <ul>
+        <li><a href="http://prantik.qd.je" target="_blank" rel="noopener">Official Blog and Personal Portal (prantik.qd.je)</a></li>
+        <li><a href="https://github.com/SaimonIslamPrantik" target="_blank" rel="noopener">Official GitHub Profile of Saimon Islam Prantik</a></li>
+        <li><a href="https://github.com/fahad09belal/" target="_blank" rel="noopener">Official GitHub Profile of Fahad Al Belal (ReMSN Co-developer)</a></li>
+        <li><a href="https://mstdn.social/@prantik" target="_blank" rel="noopener">Mastodon Profile (@prantik@mstdn.social)</a></li>
+        <li><a href="https://www.facebook.com/prantik4321" target="_blank" rel="noopener">Official Facebook Profile (prantik4321)</a></li>
+        <li><a href="https://instagram.com/prantik.insta" target="_blank" rel="noopener">Main Instagram Profile (@prantik.insta)</a></li>
+        <li><a href="https://instagram.com/ironically.prantik" target="_blank" rel="noopener">Music and Vocal Instagram (@ironically.prantik)</a></li>
+        <li><a href="mailto:prantik@tuta.io">Direct Email (prantik@tuta.io)</a></li>
+      </ul>
+    </main>
+
+    <!-- RIGHT: APPEARANCE PANEL -->
+    <aside class="wiki-appearance">
+      <div class="appearance-title">
+        <span>Appearance</span>
+        <span style="font-weight: normal; font-size: 0.75rem; color: var(--text-muted);">hide</span>
+      </div>
+
+      <div class="appearance-group">
+        <div class="appearance-group-title">Text</div>
+        <label class="appearance-option">
+          <input type="radio" name="font-size" value="small" onchange="setSize('small')" />
+          Small
+        </label>
+        <label class="appearance-option">
+          <input type="radio" name="font-size" value="standard" checked onchange="setSize('standard')" />
+          Standard
+        </label>
+        <label class="appearance-option">
+          <input type="radio" name="font-size" value="large" onchange="setSize('large')" />
+          Large
+        </label>
+      </div>
+
+      <div class="appearance-group">
+        <div class="appearance-group-title">Width</div>
+        <label class="appearance-option">
+          <input type="radio" name="page-width" value="standard" checked onchange="setWidth('standard')" />
+          Standard
+        </label>
+        <label class="appearance-option">
+          <input type="radio" name="page-width" value="wide" onchange="setWidth('wide')" />
+          Wide
+        </label>
+      </div>
+
+      <div class="appearance-group">
+        <div class="appearance-group-title">Color</div>
+        <label class="appearance-option">
+          <input type="radio" name="theme-color" value="light" checked onchange="setTheme('light')" />
+          Light
+        </label>
+        <label class="appearance-option">
+          <input type="radio" name="theme-color" value="dark" onchange="setTheme('dark')" />
+          Dark
+        </label>
+      </div>
+    </aside>
+
+  </div>
+
+  <script>
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+    function setSize(size) {
+      document.documentElement.setAttribute('data-size', size);
+    }
+    function setWidth(width) {
+      document.documentElement.setAttribute('data-width', width);
+    }
+  </script>
+</body>
+</html>
