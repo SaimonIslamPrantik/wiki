@@ -2,7 +2,7 @@
 <html lang="en" data-theme="light" data-size="standard" data-width="standard">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Saimon Islam Prantik - WikiPara</title>
   <style>
     /* ==========================================================================
@@ -76,11 +76,13 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
     a {
       color: var(--link-color);
       text-decoration: none;
+      word-break: break-word;
     }
     a:hover {
       text-decoration: underline;
@@ -90,14 +92,15 @@
     .wiki-header {
       background-color: var(--bg-content);
       border-bottom: 1px solid var(--border-subtle);
-      height: 54px;
+      min-height: 54px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 1.5rem;
+      padding: 0.5rem 1.5rem;
       position: sticky;
       top: 0;
       z-index: 1000;
+      gap: 12px;
     }
     .wiki-logo {
       display: flex;
@@ -105,6 +108,7 @@
       gap: 8px;
       text-decoration: none;
       color: var(--text-main);
+      flex-shrink: 0;
     }
     .wiki-logo svg {
       width: 32px;
@@ -145,6 +149,7 @@
       background: transparent;
       color: var(--text-main);
       font-size: 0.875rem;
+      min-width: 0;
     }
     .search-btn {
       background: var(--button-bg);
@@ -154,6 +159,7 @@
       font-size: 0.8rem;
       border-radius: 2px;
       cursor: pointer;
+      flex-shrink: 0;
     }
 
     .user-tools {
@@ -161,6 +167,7 @@
       align-items: center;
       gap: 16px;
       font-size: 0.875rem;
+      flex-shrink: 0;
     }
 
     /* Grid Layout */
@@ -174,15 +181,6 @@
       gap: 2rem;
       background-color: var(--bg-content);
       flex: 1;
-    }
-
-    @media (max-width: 1024px) {
-      .wiki-wrapper {
-        grid-template-columns: 1fr;
-      }
-      .wiki-sidebar, .wiki-appearance {
-        display: none;
-      }
     }
 
     /* Left Sidebar: TOC */
@@ -241,11 +239,13 @@
       align-items: baseline;
       border-bottom: 1px solid var(--border-color);
       padding-bottom: 0.5rem;
+      gap: 10px;
     }
     .article-title {
       font-family: var(--font-serif);
       font-size: 2.25rem;
       font-weight: normal;
+      line-height: 1.2;
     }
     .lang-dropdown {
       font-size: 0.85rem;
@@ -255,6 +255,7 @@
       padding: 4px 10px;
       border-radius: 2px;
       cursor: pointer;
+      flex-shrink: 0;
     }
 
     .article-nav-tabs {
@@ -262,6 +263,7 @@
       justify-content: space-between;
       margin-top: 0.5rem;
       font-size: 0.875rem;
+      gap: 12px;
     }
     .nav-tabs-left, .nav-tabs-right {
       display: flex;
@@ -270,6 +272,7 @@
     .nav-tab {
       padding-bottom: 4px;
       color: var(--link-color);
+      white-space: nowrap;
     }
     .nav-tab.active {
       color: var(--text-main);
@@ -325,6 +328,7 @@
       vertical-align: top;
       padding: 4px 6px;
       text-align: left;
+      word-break: break-word;
     }
     .infobox th {
       width: 36%;
@@ -368,6 +372,8 @@
     }
     p {
       margin-bottom: 0.85rem;
+      word-break: normal;
+      overflow-wrap: break-word;
     }
     ul, ol {
       margin-left: 1.5rem;
@@ -375,6 +381,7 @@
     }
     li {
       margin-bottom: 0.25rem;
+      word-break: break-word;
     }
     sup.reference {
       font-size: 0.75em;
@@ -420,6 +427,105 @@
       gap: 6px;
       margin-bottom: 4px;
       cursor: pointer;
+    }
+
+    /* ==========================================================================
+       Responsive & Mobile Rescaling Styles
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      .wiki-wrapper {
+        grid-template-columns: 1fr;
+        padding: 1.25rem 1rem;
+      }
+      .wiki-sidebar, 
+      .wiki-appearance {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      /* Header wraps neatly on mobile */
+      .wiki-header {
+        flex-wrap: wrap;
+        padding: 0.6rem 0.85rem;
+        gap: 8px 12px;
+      }
+      .header-left {
+        order: 1;
+      }
+      .user-tools {
+        order: 2;
+        gap: 12px;
+        font-size: 0.8rem;
+      }
+      .search-box {
+        order: 3;
+        width: 100%;
+        max-width: 100%;
+        margin-top: 2px;
+      }
+
+      /* Content rescaling */
+      .wiki-wrapper {
+        padding: 1rem 0.75rem;
+      }
+      .article-title {
+        font-size: 1.75rem;
+      }
+      .article-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      /* Horizontal scroll for nav tabs without ugly wrap */
+      .article-nav-tabs {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* Full width Infobox & Thumbnails for mobile readability */
+      .infobox {
+        float: none;
+        width: 100%;
+        margin: 1rem 0 1.25rem 0;
+      }
+      .infobox th {
+        width: 32%;
+      }
+      .thumb-container {
+        float: none;
+        max-width: 100%;
+        width: 100%;
+        margin: 1rem 0;
+      }
+      .thumb-container img {
+        max-height: 240px;
+        object-fit: cover;
+      }
+
+      /* Single column for references on narrow displays */
+      .references-list {
+        column-count: 1;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .wiki-logo-text {
+        font-size: 1.2rem;
+      }
+      .article-title {
+        font-size: 1.5rem;
+      }
+      .infobox th, .infobox td {
+        font-size: 0.78rem;
+        padding: 4px;
+      }
+      ul, ol {
+        margin-left: 1.2rem;
+      }
     }
   </style>
 </head>
